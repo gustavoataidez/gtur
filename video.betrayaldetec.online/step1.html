@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Step1 - Affair Detect</title>
+
+  <!-- CSS do intlTelInput (versão 17.x) -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/css/intlTelInput.css"
+  />
+  <link rel="icon" href="assets/favicon-64x64.ico" type="image/x-icon">
+  <script
+  src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+  async
+  defer
+  data-utmify-ignore-iframe
+></script>
+<script>
+  window.pixelId = "678e6e3c27d26b0948bcc31a";
+  var a = document.createElement("script");
+  a.setAttribute("async", "");
+  a.setAttribute("defer", "");
+  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+  document.head.appendChild(a);
+</script>
+
+  <style>
+    /* Reset básico */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Layout principal */
+    body {
+      background: url('https://www.argali.com.br/wp-content/uploads/2017/07/Fundo-WhatsApp.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-position: center;
+      color: #000;              /* Textos em preto */
+      font-family: Arial, sans-serif;
+      text-align: center;       /* Centraliza o texto */
+      margin: 0;                /* Remove margens padrão */
+      padding: 20px;            /* Espaço interno */
+    }
+    .width{
+      margin: 0 auto;
+    }
+
+    /* Logo centralizada */
+    .logo {
+      display: block;
+      margin: 0 auto 20px; /* 20px de espaço abaixo */
+      width: 60%;
+      border-radius: 10px;
+      max-width: 260px;
+    }
+
+    h1, h2 {
+      margin: 20px 0 10px;
+      font-size: 2.4em;
+    }
+    p {
+      margin-bottom: 20px;
+      font-size: 2em;
+    }
+
+    /* Input com bandeira */
+    .iti {
+      width: 600px !important;
+      margin: 0 auto; 
+    }
+    .iti__country-list {
+      z-index: 99999;
+      font-size: 40px;
+    }
+    .red{
+      color: red;
+    }
+
+    #phone {
+      width: 600px;
+      padding: 10px 10px 10px 60px; /* espaço p/ bandeira */
+      border-radius: 5px;
+      font-size: 50px;
+      border: 1px solid #3a3a3a;
+    }
+
+    /* Botão */
+    .botao-titulo{
+      padding: 10px;
+      background-color: #00A515; /* Cor do botão */
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+    }
+    .botao {
+      padding: 12px 20px;
+      font-size: 2.6em;
+      cursor: pointer;
+      background-color: #00A515; /* Cor do botão */
+      margin-top: 30px;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      animation: pulsar 1.5s infinite; /* Adiciona a animação */
+    }
+
+    /* Definindo a animação "pulsar" no botão */
+    @keyframes pulsar {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    
+     @media (max-width: 500px) {
+      body {
+        background: url('./assets/back-wpp.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+      }
+    } 
+
+    
+    .error-message {
+      display: none;   
+      color: #ff0000;  
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="width">
+  <!-- LOGO -->
+  <img
+    src="./assets/logo-wpp.webp" 
+    alt="Logo"
+    class="logo"
+  />
+
+  <h1>Êtes-vous fatigué(e) de soupçons constants ? Obtenez les réponses dont vous avez besoin dès maintenant.</h1>
+
+  <h2 class="botao-titulo">Première étape</h2>
+  <p>Entrez le numéro de la personne que vous souhaitez surveiller et suivre.</p>
+  
+  <h2 class="botao-titulo">Deuxième étape</h2>
+  <p>Patientez pendant que le système analyse secrètement les messages et tous les fichiers multimédias.</p>
+  
+  <h2 class="botao-titulo">Troisième étape</h2>
+  <p>Visualisez tous les messages surveillés et les fichiers suspects détectés par notre logiciel espion.</p>
+  
+  <h2 class="red">ENTREZ LE NUMÉRO DE VOTRE PARTENAIRE CI-DESSOUS 👇</h2>
+  <p>Il n’est pas nécessaire de saisir l’indicatif du pays, uniquement le numéro.</p>
+  
+  <!-- Message d’erreur (reste masqué jusqu’à ce qu’une erreur se produise) -->
+  <div id="errorMsg" class="error-message"></div>
+
+
+
+
+
+
+    <div class="width">
+      <!-- Seu HTML existente... -->
+    
+      <!-- FORMULAIRE avec intlTelInput -->
+      <form id="monitorForm">
+        <label for="phone" style="display:none;">Numéro de téléphone :</label>
+        <input
+          id="phone"
+          type="tel"
+          placeholder=""
+          required
+          onkeydown="return /[0-9() +\-BackspaceArrowLeftArrowRightDelete]/i.test(event.key)"
+        >
+        <br>
+        <button class="botao" type="submit">✅ CLIQUEZ ICI POUR SURVEILLER <br> LES NUMÉROS</button>
+      </form>
+    
+      <!-- Mensagem de erro -->
+      <div id="errorMsg" class="error-message"></div>
+    
+      <!-- Scripts necessários -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/js/intlTelInput.min.js"></script>
+      <script src="https://unpkg.com/imask"></script>
+    
+      <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const inputPhone = document.querySelector("#phone");
+        const errorMsg   = document.querySelector("#errorMsg");
+    
+        // Inicializa o intlTelInput
+        const iti = window.intlTelInput(inputPhone, {
+          initialCountry: "auto",
+          geoIpLookup: function(callback) {
+            fetch('https://ipinfo.io?token=bba8adeeb38066')
+              .then(response => response.json())
+              .then(data => callback(data.country))
+              .catch(() => callback("us"));
+          },
+          utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/js/utils.js",
+          nationalMode: true,
+          autoPlaceholder: "aggressive"
+        });
+    
+        let phoneMask = null;
+    
+        // Função para atualizar a máscara com base no país selecionado
+        function updateMask() {
+          const countryData = iti.getSelectedCountryData();
+    
+          // Remove a máscara atual, se existir
+          if(phoneMask) {
+            phoneMask.destroy();
+            phoneMask = null;
+          }
+    
+          // Aplica máscaras conforme o país selecionado
+          if(countryData.iso2 === 'br') {
+            phoneMask = IMask(inputPhone, {
+              mask: '(00) 00000-0000'
+            });
+          } else if(countryData.iso2 === 'fr' || countryData.iso2 === 'ma' || countryData.iso2 === 'dz') {
+            // Aplica formatação semelhante para França, Marrocos e Argélia
+            phoneMask = IMask(inputPhone, {
+              mask: '00 00 00 00 00'
+            });
+          }
+          // Para outros países, nenhuma máscara é aplicada
+        }
+    
+        // Aplica a máscara inicialmente e a atualiza na mudança de país
+        updateMask();
+        inputPhone.addEventListener("countrychange", updateMask);
+    
+        const minDigits = 9;
+        const maxDigits = 15;
+    
+        const form = document.getElementById("monitorForm");
+        form.addEventListener("submit", function(e) {
+          e.preventDefault();
+    
+          errorMsg.style.display = "none";
+          errorMsg.textContent = "";
+    
+          let e164Number = iti.getNumber();
+          let onlyDigits = e164Number.replace(/\D/g, "");
+    
+          if (onlyDigits.length < minDigits || onlyDigits.length > maxDigits) {
+            errorMsg.style.display = "block";
+            errorMsg.textContent = `Please enter a valid number.`;
+            return;
+          }
+    
+          if (!iti.isValidNumber()) {
+            errorMsg.style.display = "block";
+            errorMsg.textContent = "The phone number doesn't seem valid for the selected country.";
+            return;
+          }
+    
+          window.location.href = "step2.html?tel=" + encodeURIComponent(onlyDigits);
+        });
+      });
+      </script>
+    </div>
+    </body>    
+</html>
