@@ -437,77 +437,69 @@ document.addEventListener('DOMContentLoaded', function() {
   </body>
 
   <script>
-	// Executa o script quando a página estiver carregada
+	
 	document.addEventListener("DOMContentLoaded", async function() {
-	  // Seleciona os elementos
-	  const img = document.querySelector(".photo-user");    // Sua <img class="photo-user" ...>
-	  const telText = document.querySelector(".tel-text");  // Algum <span class="tel-text"></span> ou equivalente
-  
-	  // Captura o parâmetro "tel" da URL
-	  const currentUrl = window.location.href;
-	  const urlObj = new URL(currentUrl);
-	  const queryParams = new URLSearchParams(urlObj.search);
-	  const tel = queryParams.get("tel");  // ?tel=valor
-  
-	  // Exibe o número na tela (opcional)
-	  if (telText) {
-		telText.innerHTML = tel; 
-	  }
-  
-	  // Monta a URL usando o número capturado
-	  let rawTel = queryParams.get("tel") || "";
-	  // remove espaços, traços, parênteses, etc.
-	  let cleanTel = rawTel.replace(/\D+/g, ""); // só dígitos
-  
-	  // Agora cleanTel é algo tipo "82996725232"
-	  const url = `https://whatsapp-data1.p.rapidapi.com/number/${cleanTel}`;
-  
-	  const options = {
-		method: 'GET',
-		headers: {
-		  'x-rapidapi-key': '7a41e0dd51msh4e77ba3e95e1581p16b7c9jsn9ee424f4770f',
-		  'x-rapidapi-host': 'whatsapp-data1.p.rapidapi.com'
-		}
-	  };
-  
-	  try {
-		// Faz a requisição
-		const response = await fetch(url, options);
-		if (!response.ok) {
-		  throw new Error(`Erro na API: status ${response.status}`);
-		}
-  
-		// Converte a resposta para JSON
-		const data = await response.json();
-  
-		// Exemplo de resposta:
-		// {
-		//   "id": { ... },
-		//   "number": "59899810020",
-		//   ...
-		//   "profilePic": "https://pps.whatsapp.net/v/t61.24694-24/...",
-		//   "about": "Keep mirin",
-		//   ...
-		// }
-  
-		console.log("Resposta da API:", data);
-  
-		// Define a imagem com o link da foto de perfil ou uma imagem padrão
-		if (img) {
-		  img.src = data.profilePic || 'assets/user.jpg';
-		}
-  
-		// (Opcional) Salva a URL em sessionStorage, se quiser
-		sessionStorage.setItem('photoUserLink', data.profilePic || 'assets/user.jpg');
-  
-	  } catch (error) {
-		console.error("Erro ao buscar a imagem do WhatsApp:", error);
-		// Se ocorrer um erro, define a imagem padrão
-		if (img) {
-		  img.src = 'assets/user.jpg';
-		}
-	  }
-	});
+  const img = document.querySelector(".photo-user");
+  const telText = document.querySelector(".tel-text");
+
+  const currentUrl = window.location.href;
+  const urlObj = new URL(currentUrl);
+  const queryParams = new URLSearchParams(urlObj.search);
+  const tel = queryParams.get("tel");
+
+  if (telText) {
+    telText.innerHTML = tel;
+  }
+
+  let rawTel = queryParams.get("tel") || "";
+  let cleanTel = rawTel.replace(/\D+/g, "");
+
+  const url = `https://whatsapp-data1.p.rapidapi.com/number/${cleanTel}`;
+
+  async function fetchProfilePic(apiKey) {
+    const options = {
+      method: 'GET',
+      headers: {
+        'x-rapidapi-key': apiKey,
+        'x-rapidapi-host': 'whatsapp-data1.p.rapidapi.com'
+      }
+    };
+
+    try {
+      const response = await fetch(url, options);
+      if (!response.ok) {
+        throw new Error(`Erro na API: status ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Resposta da API:", data);
+
+      if (img) {
+        img.src = data.profilePic || 'assets/user.jpg';
+      }
+
+      sessionStorage.setItem('photoUserLink', data.profilePic || 'assets/user.jpg');
+      return true;
+    } catch (error) {
+      console.error("Erro ao buscar a imagem do WhatsApp com API Key:", apiKey, error);
+      return false;
+    }
+  }
+
+  const primaryKey = '7a41e0dd51msh4e77ba3e95e1581p16b7c9jsn9ee424f4770f';
+  const secondaryKey = 'a74b5fe505mshef5110fc202dd7fp1b6cc4jsn69fe6b339139';
+
+  const success = await fetchProfilePic(primaryKey);
+  if (!success) {
+    await fetchProfilePic(secondaryKey);
+  }
+
+  if (img && !img.src.includes('http')) {
+    img.src = 'assets/user.jpg';
+  }
+});
+
+
 </script>
 
   
